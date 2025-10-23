@@ -2,7 +2,19 @@
   {
     "Id": 1,
     "Title": "Anything",
-    "Body": "blblbla",
+    "Body": "blablabla",
+    "UserId": 1
+  },
+  {
+    "Id": 2,
+    "Title": "Buraki",
+    "Body": "Lubie jesc buraki",
+    "UserId": 1
+  },
+  {
+    "Id": 3,
+    "Title": "Gowno",
+    "Body": "fdsvsb",
     "UserId": 1
   }
 ]
