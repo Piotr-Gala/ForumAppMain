@@ -1,0 +1,82 @@
+@WebAPI_HostAddress = http://localhost:5155
+
+### Create user
+POST {{WebAPI_HostAddress}}/Users
+Content-Type: application/json
+
+{
+  "userName": "martyna",
+  "password": "123"
+}
+
+### Get all users
+GET {{WebAPI_HostAddress}}/Users
+
+### Get single user
+GET {{WebAPI_HostAddress}}/Users/1
+
+### Update user
+PUT {{WebAPI_HostAddress}}/Users/1
+Content-Type: application/json
+
+{
+  "userName": "marti",
+  "password": ""
+}
+
+### Delete user
+DELETE {{WebAPI_HostAddress}}/Users/1
+
+
+### POSTS
+### Create
+POST {{WebAPI_HostAddress}}/Posts
+Content-Type: application/json
+
+{ "title": "Hello", "content": "First post", "userId": 1 }
+
+### List (all)
+GET {{WebAPI_HostAddress}}/Posts
+
+### List (filters)
+GET {{WebAPI_HostAddress}}/Posts?title=Hel
+GET {{WebAPI_HostAddress}}/Posts?userId=1
+
+### Get single
+GET {{WebAPI_HostAddress}}/Posts/1
+
+### Update
+PUT {{WebAPI_HostAddress}}/Posts/1
+Content-Type: application/json
+
+{ "title": "Edited", "content": "Updated body", "userId": 1 }
+
+### Delete
+DELETE {{WebAPI_HostAddress}}/Posts/1
+
+
+### COMMENTS
+### Create
+POST {{WebAPI_HostAddress}}/Comments
+Content-Type: application/json
+
+{ "content": "Nice!", "userId": 1, "postId": 1 }
+
+### List (all)
+GET {{WebAPI_HostAddress}}/Comments
+
+### List (filters)
+GET {{WebAPI_HostAddress}}/Comments?userId=1
+GET {{WebAPI_HostAddress}}/Comments?postId=1
+
+### Get single
+GET {{WebAPI_HostAddress}}/Comments/1
+
+### Update
+PUT {{WebAPI_HostAddress}}/Comments/1
+Content-Type: application/json
+
+{ "content": "Edited comment" }
+
+### Delete
+DELETE {{WebAPI_HostAddress}}/Comments/1

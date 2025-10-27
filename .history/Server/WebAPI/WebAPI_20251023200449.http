@@ -1,0 +1,28 @@
+@WebAPI_HostAddress = http://localhost:5155
+
+### Create user
+POST {{WebAPI_HostAddress}}/Users
+Content-Type: application/json
+
+{
+  "userName": "martyna",
+  "password": "123"
+}
+
+### Get all users
+GET {{WebAPI_HostAddress}}/Users
+
+### Get single user
+GET {{WebAPI_HostAddress}}/Users/1
+
+### Update user
+PUT {{WebAPI_HostAddress}}/Users/1
+Content-Type: application/json
+
+{
+  "userName": "marti",
+  "password": ""
+}
+
+### Delete user
+DELETE {{WebAPI_HostAddress}}/Users/1
