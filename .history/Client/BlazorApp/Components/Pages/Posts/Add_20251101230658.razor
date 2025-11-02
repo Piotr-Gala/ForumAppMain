@@ -1,0 +1,26 @@
+@page "/posts/add"
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<h3>Add post</h3>
+<input @bind="title" placeholder="Title" />
+<textarea @bind="body" placeholder="Body"></textarea>
+<button @onclick="AddPost">Add</button>
+<p style="color:red">@error</p>
+
+@code {
+    string title = "", body = "";
+    string? error;
+
+    async Task AddPost()
+    {
+        try
+        {
+            var added = await Posts.AddPostAsync(new ApiContracts.Posts.CreatePostDto {
+                Title = title, Body = body, UserId = 1 // hardcode wg assignment
+            });
+            Nav.NavigateTo($"/posts/{added.Id}");
+        }
+        catch (Exception ex) { error = ex.Message; }
+    }
+}

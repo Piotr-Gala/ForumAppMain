@@ -1,0 +1,26 @@
+@page "/posts"
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<h3>Posts</h3>
+
+@if (items is null) { <p>Loading…</p> }
+else if (items.Count == 0) { <p>No posts.</p> }
+else
+{
+    <ul>
+        @foreach (var p in items)
+        {
+            <li>
+                <a href="@($"/posts/{p.Id}")">@p.Title</a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    List<ApiContracts.Posts.PostDto>? items;
+
+    protected override async Task OnInitializedAsync()
+        => items = await Posts.GetAllAsync();
+}

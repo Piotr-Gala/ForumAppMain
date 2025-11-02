@@ -4,5 +4,17 @@
     "Title": "First Post",
     "Body": "This is the first post",
     "UserId": 1
+  },
+  {
+    "Id": 2,
+    "Title": "P\u0142atki i Mleko",
+    "Body": "Najpierw P\u0142atki czy Mleko?",
+    "UserId": 1
+  },
+  {
+    "Id": 3,
+    "Title": "Kaczki",
+    "Body": "ryz woda staw",
+    "UserId": 1
   }
 ]

@@ -1,0 +1,48 @@
+@page "/posts/{Id:int}"
+@using ApiContracts.Posts
+@using ApiContracts.Comments
+@inject IPostService Posts
+@inject ICommentService Comments
+
+<h3>@post?.Title</h3>
+<p>@post?.Body</p>
+
+<h4>Comments</h4>
+@if (comments is null) { <p>Loading…</p> }
+else if (comments.Count == 0) { <p>No comments yet.</p> }
+else { <ul>@foreach (var c in comments) { <li>@c.Body</li> }</ul> }
+
+<h4>Add comment</h4>
+<textarea @bind="newComment" rows="3" style="width:100%"></textarea>
+<br />
+<button @onclick="AddComment">Add</button>
+<p style="color:red">@error</p>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    PostDto? post;
+    List<CommentDto>? comments;
+    string newComment = "";
+    string? error;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        post = await Posts.GetByIdAsync(Id);
+        comments = await Comments.GetByPostIdAsync(Id);
+    }
+
+    async Task AddComment()
+    {
+        if (string.IsNullOrWhiteSpace(newComment)) { error = "Comment is empty."; return; }
+        error = null;
+        try
+        {
+            await Comments.AddAsync(new CreateCommentDto {
+                Body = newComment, PostId = Id, UserId = 1
+            });
+            newComment = "";
+            comments = await Comments.GetByPostIdAsync(Id); // refresh
+        }
+        catch (Exception ex) { error = ex.Message; }
+    }
+}

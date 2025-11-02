@@ -1,0 +1,32 @@
+@page "/users/add"
+@inject IUserService Users
+
+<h3>Add user</h3>
+
+<input @bind="username" placeholder="Username" />
+<input @bind="password" placeholder="Password" type="password" />
+<button @onclick="AddUser">Add</button>
+
+<p style="color:red">@error</p>
+<p style="color:green">@ok</p>
+
+@code {
+    string username = "";
+    string password = "";
+    string? error;
+    string? ok;
+
+    async Task AddUser()
+    {
+        error = ok = null;
+        try
+        {
+            var dto = await Users.AddUserAsync(new ApiContracts.Users.CreateUserDto {
+                UserName = username,
+                Password = password
+            });
+            ok = $"Added user #{dto.Id} ({dto.UserName})";
+        }
+        catch (Exception ex) { error = ex.Message; }
+    }
+}

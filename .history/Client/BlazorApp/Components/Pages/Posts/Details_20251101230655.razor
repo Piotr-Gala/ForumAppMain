@@ -1,0 +1,45 @@
+@page "/posts/{Id:int}"
+@inject IPostService Posts
+@inject ICommentService Comments
+
+<h3>@post?.Title</h3>
+<p>@post?.Body</p>
+
+<h4>Comments</h4>
+@if (comments is null) { <p>Loading…</p> }
+else if (comments.Count == 0) { <p>No comments.</p> }
+else { <ul>@foreach (var c in comments) { <li>@c.Body</li> }</ul> }
+
+<h4>Add comment</h4>
+<textarea @bind="newComment"></textarea>
+<button @onclick="AddComment">Add</button>
+<p style="color:red">@error</p>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    ApiContracts.Posts.PostDto? post;
+    List<ApiContracts.Comments.CommentDto>? comments;
+    string newComment = "";
+    string? error;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        post = await Posts.GetByIdAsync(Id);
+        comments = await Comments.GetByPostIdAsync(Id);
+    }
+
+    async Task AddComment()
+    {
+        error = null;
+        try
+        {
+            // assignment pozwala na hardcode userId=1
+            await Comments.AddAsync(new ApiContracts.Comments.CreateCommentDto {
+                Body = newComment, UserId = 1, PostId = Id
+            });
+            newComment = "";
+            comments = await Comments.GetByPostIdAsync(Id); // odśwież
+        }
+        catch (Exception ex) { error = ex.Message; }
+    }
+}

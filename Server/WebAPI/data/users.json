@@ -8,5 +8,20 @@
     "Id": 2,
     "Username": "Gean",
     "Password": "string"
+  },
+  {
+    "Id": 3,
+    "Username": "Krzysiu",
+    "Password": "1234"
+  },
+  {
+    "Id": 4,
+    "Username": "Micha\u0142",
+    "Password": "dwhufb"
+  },
+  {
+    "Id": 5,
+    "Username": "Marek",
+    "Password": "chsuibcwnwo"
   }
 ]

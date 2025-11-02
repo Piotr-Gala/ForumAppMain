@@ -1,0 +1,28 @@
+@page "/posts/create"
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<h3>Create post</h3>
+<input @bind="title" placeholder="Title" />
+<br />
+<textarea @bind="body" placeholder="Body" rows="5" style="width:100%"></textarea>
+<br />
+<button @onclick="Create">Create</button>
+<p style="color:red">@error</p>
+
+@code {
+    string title = "", body = "";
+    string? error;
+
+    async Task Create()
+    {
+        try
+        {
+            var created = await Posts.AddPostAsync(new ApiContracts.Posts.CreatePostDto {
+                Title = title, Body = body, UserId = 1
+            });
+            Nav.NavigateTo($"/posts/{created.Id}");
+        }
+        catch (Exception ex) { error = ex.Message; }
+    }
+}

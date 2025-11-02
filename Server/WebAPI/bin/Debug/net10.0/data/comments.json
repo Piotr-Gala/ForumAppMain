@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 1,
+    "Body": "Pedro pedro pedro",
+    "UserId": 1,
+    "PostId": 1
+  },
+  {
+    "Id": 2,
+    "Body": "twoja stara",
+    "UserId": 1,
+    "PostId": 1
+  },
+  {
+    "Id": 3,
+    "Body": "hau hau",
+    "UserId": 1,
+    "PostId": 1
+  }
+]
