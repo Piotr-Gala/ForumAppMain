@@ -70,5 +70,11 @@
     "Body": "Mleko",
     "UserId": 1,
     "PostId": 2
+  },
+  {
+    "Id": 13,
+    "Body": "Let me ad a comment first",
+    "UserId": 1,
+    "PostId": 4
   }
 ]

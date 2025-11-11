@@ -1,5 +1,7 @@
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\appsettings.json
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\data\comments.json
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\data\posts.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\data\users.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\WebAPI.staticwebassets.endpoints.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\WebAPI.exe
@@ -42,5 +44,3 @@ C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\obj\Debug\net10.0\refint\WebAP
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\obj\Debug\net10.0\WebAPI.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\obj\Debug\net10.0\WebAPI.genruntimeconfig.cache
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\obj\Debug\net10.0\ref\WebAPI.dll
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\data\posts.json
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\WebAPI\bin\Debug\net10.0\data\comments.json

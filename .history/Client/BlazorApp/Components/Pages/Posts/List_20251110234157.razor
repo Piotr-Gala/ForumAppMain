@@ -1,0 +1,206 @@
+@page "/posts"
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<h3>Posts</h3>
+
+<!-- Filter by Title -->
+<div class="mb-2">
+    <label>Filter by Title: </label>
+    <input @bind="titleFilter" placeholder="e.g. hello" />
+    <button @onclick="SearchByTitle">Search</button>
+</div>
+
+<!-- Filter by UserId (integer) -->
+<div class="mb-2">
+    <label>Filter by UserId (integer): </label>
+    <input @bind="userIdText" placeholder="e.g. 1" />
+    <button @onclick="SearchByUserId">Search</button>
+</div>
+
+<!-- Clear filters -->
+<div class="mb-2">
+    <button @onclick="LoadAll">Clear filters</button>
+</div>
+
+<!-- Display errors if something went wrong -->
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p style="color:red">@error</p>
+}
+
+<!-- Simple table with results -->
+@if (posts is null)
+{
+    <p>Loading...</p>
+}
+else if (posts.Count == 0)
+{
+    <p>No posts.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left;">Id</th>
+                <th style="text-align:left;">Title</th>
+                <th style="text-align:left;">UserId</th>
+                <th style="text-align:left;">Open</th>
+                <th style="text-align:left;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in posts)
+        {
+            <tr>
+                <td>@p.Id</td>
+                <td>@p.Title</td>
+                <td>@p.UserId</td>
+                <td>
+                    <!-- Link to details -->
+                    <a href="@($"/posts/{p.Id}")">Details</a>
+                </td>
+                <td>
+                    <!-- A5: only author (UserId == 1) can edit/delete -->
+                    @if (p.UserId == 1)
+                    {
+                        <!-- Edit: simple navigation to edit page -->
+                        <button @onclick="@(()=> Nav.NavigateTo($"/posts/{p.Id}/edit"))">Edit</button>
+
+                        <!-- Delete: 2-step confirmation per row -->
+                        @if (confirmDeleteId != p.Id)
+                        {
+                            <button style="margin-left:6px" @onclick="@(()=> confirmDeleteId = p.Id)">Delete</button>
+                        }
+                        else
+                        {
+                            <span style="margin-left:6px">
+                                Sure?
+                                <button @onclick="@(()=> Delete(p.Id))">Yes</button>
+                                <button style="margin-left:6px" @onclick="@(()=> confirmDeleteId = null)">No</button>
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span style="color:#888">—</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    // === COMPONENT STATE ===
+    private List<PostDto>? posts;   // currently displayed posts
+    private string? titleFilter;    // entered title for filtering
+    private string? userIdText;     // entered userId as text (to avoid exceptions when parsing)
+    private string? error;          // last error to display
+    private int? confirmDeleteId;   // ID of the post for which we show delete confirmation
+
+    // === LIFECYCLE: start with loading all posts ===
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAll();
+    }
+
+    // Load all posts (without filters)
+    private async Task LoadAll()
+    {
+        error = null; // clear errors
+        try
+        {
+            posts = await Posts.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            confirmDeleteId = null;
+            posts = [];
+        }
+    }
+
+    // Search by title
+    private async Task SearchByTitle()
+    {
+        error = null;
+        confirmDeleteId = null;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(titleFilter))
+            {
+                await LoadAll(); // no title => show all
+                return;
+            }
+
+            posts = await Posts.GetByTitleAsync(titleFilter);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            posts = [];
+        }
+    }
+
+    // Search by userId
+    private async Task SearchByUserId()
+    {
+        error = null;
+        confirmDeleteId = null;
+        try
+        {
+            if (!int.TryParse(userIdText, out var uid))
+            {
+                error = "UserId must be an integer.";
+                return;
+            }
+
+            posts = await Posts.GetByUserIdAsync(uid);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            posts = [];
+        }
+    }
+
+    // Delete post + refresh list/filter
+    private async Task Delete(int id)
+    {
+        error = null;
+
+        try
+        {
+            await Posts.DeleteAsync(id);
+
+            // After successful delete: remove confirmation
+            confirmDeleteId = null;
+
+            // Refresh strategy:
+            // 1) if active title filter -> refresh by title
+            // 2) else if active userId filter -> refresh by userId
+            // 3) else -> full list
+            if (!string.IsNullOrWhiteSpace(titleFilter))
+            {
+                await SearchByTitle();
+            }
+            else if (int.TryParse(userIdText, out _))
+            {
+                await SearchByUserId();
+            }
+            else
+            {
+                await LoadAll();
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            // if error, leave confirmDeleteId = null, to hide prompt
+            confirmDeleteId = null;
+        }
+    }
+}

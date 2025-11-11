@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9eaBxS1/oIE=",
+  "dgSpecHash": "lSG5pLlgy54=",
   "success": true,
-  "projectFilePath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj",
+  "projectFilePath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\piter\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.0-preview.7.25380.108\\microsoft.aspnetcore.app.internal.assets.10.0.0-preview.7.25380.108.nupkg.sha512"
   ],

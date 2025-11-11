@@ -1,0 +1,136 @@
+@page "/posts/{Id:int}"
+@using ApiContracts.Posts
+@using ApiContracts.Comments
+@inject IPostService Posts
+@inject ICommentService Comments
+
+<h3>Post Details</h3>
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p style="color:red">@error</p>
+}
+
+@if (post is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div style="border:1px solid #ddd;padding:10px;margin-bottom:10px">
+        <p><b>Id:</b> @post.Id</p>
+        <p><b>Title:</b> @post.Title</p>
+        <p><b>Body:</b> @post.Body</p>
+        <p><b>UserId:</b> @post.UserId</p>
+    </div>
+
+    <h4>Comments</h4>
+
+    @if (comments is null)
+    {
+        <p>Loading comments...</p>
+    }
+    else if (comments.Count == 0)
+    {
+        <p>No comments yet.</p>
+    }
+    else
+    {
+        <ul>
+        @foreach (var c in comments)
+        {
+            <li>
+                <b>[@c.Id]</b> (@c.UserId): @c.Body
+            </li>
+        }
+        </ul>
+    }
+
+    <h5>Add Comment</h5>
+    <!-- A5: static UserId = 1 -->
+    <div style="margin-bottom:6px">
+        <label>Body:</label><br />
+        <textarea @bind="newCommentBody" rows="3" cols="50"></textarea>
+    </div>
+    <button @onclick="AddComment">Add</button>
+    @if (!string.IsNullOrWhiteSpace(addCommentError))
+    {
+        <p style="color:red">@addCommentError</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(addCommentOk))
+    {
+        <p style="color:green">@addCommentOk</p>
+    }
+}
+
+@code {
+    [Parameter] public int id { get; set; }   // post id from URL
+
+    private PostDto? post;                    // post data
+    private List<CommentDto>? comments;       // comments for the post
+    private string? error;                    // general error (post/comments)
+    private string? addCommentError;          // error when adding comment
+    private string? addCommentOk;             // success message after adding
+    private string? newCommentBody;           // body of the new comment
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // On each change of the id parameter, we fetch the data again
+        error = addCommentError = addCommentOk = null;
+
+        try
+        {
+            post = await Posts.GetByIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            error = $"Cannot load post: {ex.Message}";
+            post = null;
+            comments = [];
+            return;
+        }
+
+        try
+        {
+            comments = await Comments.GetByPostIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            error = $"Cannot load comments: {ex.Message}";
+            comments = [];
+        }
+    }
+
+    private async Task AddComment()
+    {
+        addCommentError = addCommentOk = null;
+
+        if (string.IsNullOrWhiteSpace(newCommentBody))
+        {
+            addCommentError = "Body is required.";
+            return;
+        }
+
+        try
+        {
+            // A5: static UserId = 1
+            var dto = new CreateCommentDto
+            {
+                PostId = id,
+                UserId = 1,
+                Body = newCommentBody
+            };
+
+            await Comments.AddAsync(dto);
+
+            // After adding – clear textarea and reload comments list
+            newCommentBody = string.Empty;
+            comments = await Comments.GetByPostIdAsync(id);
+            addCommentOk = "Comment added.";
+        }
+        catch (Exception ex)
+        {
+            addCommentError = ex.Message;
+        }
+    }
+}

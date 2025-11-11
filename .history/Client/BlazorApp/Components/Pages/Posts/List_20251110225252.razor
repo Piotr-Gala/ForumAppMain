@@ -1,0 +1,138 @@
+@page "/posts"
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<h3>Posts</h3>
+
+<!-- Filter by Title -->
+<div class="mb-2">
+    <label>Filter by Title: </label>
+    <input @bind="titleFilter" placeholder="e.g. hello" />
+    <button @onclick="SearchByTitle">Search</button>
+</div>
+
+<!-- Filter by UserId (integer) -->
+<div class="mb-2">
+    <label>Filter by UserId (integer): </label>
+    <input @bind="userIdText" placeholder="e.g. 1" />
+    <button @onclick="SearchByUserId">Search</button>
+</div>
+
+<!-- Reset filters -->
+<div class="mb-2">
+    <button @onclick="LoadAll">Clear filters</button>
+</div>
+
+<!-- Display errors if something went wrong -->
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p style="color:red">@error</p>
+}
+
+<!-- Simple table with results -->
+@if (posts is null)
+{
+    <p>Loading...</p>
+}
+else if (posts.Count == 0)
+{
+    <p>No posts.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>UserId</th>
+                <th>Open</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in posts)
+        {
+            <tr>
+                <td>@p.Id</td>
+                <td>@p.Title</td>
+                <td>@p.UserId</td>
+                <td>
+                    <!-- Link to details -->
+                    <a href="@($"/posts/{p.Id}")">Details</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    // === COMPONENT STATE ===
+    private List<PostDto>? posts;   // currently displayed posts
+    private string? titleFilter;    // entered title for filtering
+    private string? userIdText;     // entered userId as text (to avoid exceptions when parsing)
+    private string? error;          // last error to display
+
+    // === LIFECYCLE: start with loading all posts ===
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAll();
+    }
+
+    // Load all posts (without filters)
+    private async Task LoadAll()
+    {
+        error = null; // clear errors
+        try
+        {
+            posts = await Posts.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            posts = [];
+        }
+    }
+
+    // Search by title
+    private async Task SearchByTitle()
+    {
+        error = null;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(titleFilter))
+            {
+                await LoadAll(); // no title => show all
+                return;
+            }
+
+            posts = await Posts.GetByTitleAsync(titleFilter);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            posts = [];
+        }
+    }
+
+    // Search by userId
+    private async Task SearchByUserId()
+    {
+        error = null;
+        try
+        {
+            if (!int.TryParse(userIdText, out var uid))
+            {
+                error = "UserId must be an integer.";
+                return;
+            }
+
+            posts = await Posts.GetByUserIdAsync(uid);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            posts = [];
+        }
+    }
+}

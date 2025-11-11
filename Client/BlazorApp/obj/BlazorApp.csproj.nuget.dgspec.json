@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj": {}
+    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj": {
+    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj",
+        "projectUniqueName": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj",
         "projectName": "BlazorApp",
-        "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj",
+        "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj",
         "packagesPath": "C:\\Users\\piter\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\obj\\",
+        "outputPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\piter\\AppData\\Roaming\\NuGet\\NuGet.Config"

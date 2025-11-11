@@ -27,8 +27,10 @@ C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\CLI.runtimeconf
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\CLI.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\CLI.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\Entities.dll
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\FileRepositories.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\RepositoryContracts.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\Entities.pdb
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\FileRepositories.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\RepositoryContracts.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\obj\Debug\net10.0\CLI.csproj.AssemblyReference.cache
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\obj\Debug\net10.0\CLI.GeneratedMSBuildEditorConfig.editorconfig
@@ -42,5 +44,3 @@ C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\obj\Debug\net10.0\refint\CLI.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\obj\Debug\net10.0\CLI.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\obj\Debug\net10.0\CLI.genruntimeconfig.cache
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\obj\Debug\net10.0\ref\CLI.dll
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\FileRepositories.dll
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\CLI\bin\Debug\net10.0\FileRepositories.pdb

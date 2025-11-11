@@ -2,7 +2,7 @@
   {
     "Id": 1,
     "Title": "First Post",
-    "Body": "This is the first post",
+    "Body": "This is the first post\n\n[edit]",
     "UserId": 1
   },
   {
@@ -14,7 +14,37 @@
   {
     "Id": 3,
     "Title": "Kaczki",
-    "Body": "ryz woda staw",
+    "Body": "ryz woda staw anything",
+    "UserId": 1
+  },
+  {
+    "Id": 4,
+    "Title": "poscik",
+    "Body": "dupa",
+    "UserId": 1
+  },
+  {
+    "Id": 5,
+    "Title": "post2",
+    "Body": "dupa",
+    "UserId": 1
+  },
+  {
+    "Id": 6,
+    "Title": "dvmkedfvfedupa",
+    "Body": "kupakupa",
+    "UserId": 1
+  },
+  {
+    "Id": 7,
+    "Title": "nionionio",
+    "Body": "Zara robi kupe",
+    "UserId": 1
+  },
+  {
+    "Id": 8,
+    "Title": "PPFPF",
+    "Body": "HGFDSVC",
     "UserId": 1
   }
 ]

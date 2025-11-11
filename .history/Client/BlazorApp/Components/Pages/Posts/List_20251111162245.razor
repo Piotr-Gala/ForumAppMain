@@ -1,0 +1,416 @@
+@page "/posts"
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<h3>Posts</h3>
+
+<!-- ===== SORT + PAGE SIZE (works only without filters) ===== -->
+<div class="mb-2" style="display:flex; gap:16px; align-items:center;">
+    <div>
+        <label>Sort: </label>
+        <select @bind="sort">
+            <option value="createdDesc">Newest first</option>
+            <option value="createdAsc">Oldest first</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Page size: </label>
+        <select @bind="pageSize">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+        </select>
+    </div>
+
+    <!-- Apply pagination (only when there are NO filters) -->
+    <button @onclick="ApplyPagination">Apply</button>
+
+    <a href="/posts/add" style="margin-left:auto">+ Add Post</a>
+</div>
+
+<!-- Filter by Title -->
+<div class="mb-2">
+    <label>Filter by Title: </label>
+    <input @bind="titleFilter" placeholder="e.g. hello" />
+    <button @onclick="SearchByTitle">Search</button>
+</div>
+
+<!-- Filter by UserId (integer) -->
+<div class="mb-2">
+    <label>Filter by UserId (integer): </label>
+    <input @bind="userIdText" placeholder="e.g. 1" />
+    <button @onclick="SearchByUserId">Search</button>
+</div>
+
+<!-- Clear filters -->
+<div class="mb-2">
+    <button @onclick="LoadAll">Clear filters</button>
+</div>
+
+<!-- Display errors if something went wrong -->
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p style="color:red">@error</p>
+}
+
+<!-- ===== RENDER: filters vs. pagination ===== -->
+@{
+    bool hasTitle = !string.IsNullOrWhiteSpace(titleFilter);
+    bool hasUser  = int.TryParse(userIdText, out _);
+    bool filtersActive = hasTitle || hasUser;
+}
+
+<!-- Simple table with results -->
+@if (filtersActive)
+{
+    <!-- ====== Filters ====== -->
+    @if (postsFiltered is null)
+    {
+        <p>Loading...</p>
+    }
+    else if (postsFiltered.Count == 0)
+    {
+        <p>No posts.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:left;">Id</th>
+                    <th style="text-align:left;">Title</th>
+                    <th style="text-align:left;">UserId</th>
+                    <th style="text-align:left;">Open</th>
+                    <th style="text-align:left;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var p in postsFiltered.Skip((page - 1) * pageSize).Take(pageSize))
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Title</td>
+                    <td>@p.UserId</td>
+                    <td>
+                        <!-- Link to details -->
+                        <a href="@($"/posts/{p.Id}")">Details</a>
+                    </td>
+                    <td>
+                        @if (p.UserId == 1)
+                        {
+                            <button @onclick="@(()=> Nav.NavigateTo($"/posts/{p.Id}/edit"))">Edit</button>
+
+                            @if (confirmDeleteId != p.Id)
+                            {
+                                <button style="margin-left:6px" @onclick="@(()=> confirmDeleteId = p.Id)">Delete</button>
+                            }
+                            else
+                            {
+                                <span style="margin-left:6px">
+                                    Sure?
+                                    <button @onclick="@(()=> DeleteFiltered(p.Id))">Yes</button>
+                                    <button style="margin-left:6px" @onclick="@(()=> confirmDeleteId = null)">No</button>
+                                </span>
+                            }
+                        }
+                        else { <span style="color:#888">—</span> }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <p>
+            Showing <b>@(((TotalFiltered == 0) ? 0 : ((page - 1) * pageSize + 1)))–@(
+                Math.Min(page * pageSize, TotalFiltered)
+            )</b> of <b>@TotalFiltered</b> (Page <b>@(page)</b>)
+        </p>
+        <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+            <button @onclick="PrevFilter" disabled="@(page <= 1)">Prev</button>
+            <button @onclick="NextFilter" disabled="@((page * pageSize) >= TotalFiltered)">Next</button>
+            <span>Page <b>@(page)</b></span>
+        </div>
+    }
+}
+else
+{
+    <!-- ====== Pagination (A5) ====== -->
+    @if (pageData is null)
+    {
+        <p>Loading...</p>
+    }
+    else if (pageData.Items.Count == 0)
+    {
+        <p>No posts.</p>
+    }
+    else
+    {
+        <p>
+            Showing <b>@startIdx–@endIdx</b> of <b>@pageData.TotalCount</b>
+            (Page <b>@(page)</b>)
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:left;">Id</th>
+                    <th style="text-align:left;">Title</th>
+                    <th style="text-align:left;">UserId</th>
+                    <th style="text-align:left;">Open</th>
+                    <th style="text-align:left;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var p in pageData.Items)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Title</td>
+                    <td>@p.UserId</td>
+                    <td>
+                        <a href="@($"/posts/{p.Id}")">Details</a>
+                    </td>
+                    <td>            <!-- A5: „autor = 1” (do podmiany po auth) -->
+                        @if (p.UserId == 1) 
+                        {
+                            <button @onclick="@(()=> Nav.NavigateTo($"/posts/{p.Id}/edit"))">Edit</button>
+
+                            @if (confirmDeleteId != p.Id)
+                            {
+                                <button style="margin-left:6px" @onclick="@(()=> confirmDeleteId = p.Id)">Delete</button>
+                            }
+                            else
+                            {
+                                <span style="margin-left:6px">
+                                    Sure?
+                                    <button @onclick="@(()=> DeletePaged(p.Id))">Yes</button>
+                                    <button style="margin-left:6px" @onclick="@(()=> confirmDeleteId = null)">No</button>
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span style="color:#888">—</span>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <!-- PAGER -->
+        <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+            <button @onclick="Prev" disabled="@isPrevDisabled">Prev</button>
+            <button @onclick="Next" disabled="@isNextDisabled">Next</button>
+            <span>Page <b>@(page)</b></span>
+        </div>
+    }
+}
+
+@code {
+    // === COMPONENT STATE ===
+
+    // ======= Shared =======
+    private string? error;          // last error to display
+    private int? confirmDeleteId;   // ID of the post for which we show delete confirmation
+
+    // ======= Filters =======
+    private List<PostDto>? postsFiltered;   // currently displayed posts
+    private string? titleFilter;    // entered title for filtering
+    private string? userIdText;     // entered userId as text (to avoid exceptions when parsing)
+    private int TotalFiltered => postsFiltered?.Count ?? 0; // total count in filter mode
+    // ======= Pagination =======
+    // Backend: GET /posts?page=1&pageSize=10&sort=createdDesc => PagedResult<PostDto> { Items, TotalCount }
+    private PagedResult<PostDto>? pageData;
+
+    private int page = 1;          // numer strony (1-based)
+    private int pageSize = 10;     // 5 / 10 / 20
+    private string sort = "createdDesc"; // "createdDesc" | "createdAsc"
+
+
+    private int startIdx => (pageData is null || pageData.TotalCount == 0) ? 0 : ((page - 1) * pageSize) + 1;
+    private int endIdx   => (pageData is null) ? 0 : Math.Min(page * pageSize, pageData.TotalCount);
+
+    private bool isPrevDisabled => page <= 1;
+    private bool isNextDisabled => pageData is null || (page * pageSize) >= pageData.TotalCount;
+
+    private void PrevFilter() { if (page > 1) page--; }
+    private void NextFilter() { if ((page * pageSize) < TotalFiltered) page++; }
+    
+    // === LIFECYCLE: start with loading all posts ===
+    protected override async Task OnInitializedAsync()
+    {
+        await ReloadPaged();
+    }
+
+    // ======= Actions: Filters =======
+
+    // Load all posts (without filters)
+    private async Task LoadAll()
+    {
+        error = null; // clear errors
+        try
+        {
+            postsFiltered = await Posts.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            confirmDeleteId = null;
+            postsFiltered = [];
+        }
+    }
+
+    private async Task ClearAll()
+    {
+        titleFilter = null;
+        userIdText = null;
+        postsFiltered = null; // wyłącz tryb filtrów
+        page = 1;
+        await ReloadPaged();  // wróć do backendowej paginacji
+    }
+
+
+    // Search by title
+    private async Task SearchByTitle()
+    {
+        error = null;
+        confirmDeleteId = null;
+        if (string.IsNullOrWhiteSpace(titleFilter)) { await ClearAll(); return; }
+        try
+        {
+            postsFiltered = await Posts.GetByTitleAsync(titleFilter);
+            page = 1; // <-- ważne: startuj od strony 1 po zmianie filtra
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            postsFiltered = new();
+        }
+    }
+
+    // Search by userId
+    private async Task SearchByUserId()
+    {
+        error = null; confirmDeleteId = null;
+        if (!int.TryParse(userIdText, out var uid)) { error = "UserId must be an integer."; return; }
+        try
+        {
+            postsFiltered = await Posts.GetByUserIdAsync(uid);
+            page = 1; // <-- reset strony
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            postsFiltered = new();
+        }
+    }
+
+    // ======= Actions: Pagination =======
+
+    private async Task ApplyPagination()
+    {
+        // Works only when there are NO filters; if there are, we stay in filter mode.
+        if (!string.IsNullOrWhiteSpace(titleFilter) || int.TryParse(userIdText, out _))
+            return;
+
+        page = 1; // after changing sort/size we start from page 1
+        await ReloadPaged();
+    }
+
+    private async Task ReloadPaged()
+    {
+        error = null;
+        confirmDeleteId = null;
+
+        try
+        {
+            pageData = await Posts.GetPageAsync(page, pageSize, sort);
+
+            // If we are out of range (e.g. after deleting records)
+            var maxPage = Math.Max(1, (int)Math.Ceiling((pageData.TotalCount) / (double)pageSize));
+            if (page > maxPage)
+            {
+                page = maxPage;
+                pageData = await Posts.GetPageAsync(page, pageSize, sort);
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            pageData = new PagedResult<PostDto> { Items = new List<PostDto>(), TotalCount = 0 };
+        }
+    }
+
+    private async Task Prev()
+    {
+        if (page <= 1) return;
+        page--;
+        await ReloadPaged();
+    }
+
+    private async Task Next()
+    {
+        if (pageData is null) return;
+        if ((page * pageSize) >= pageData.TotalCount) return;
+
+        page++;
+        await ReloadPaged();
+    }
+
+    // ======= Delete =======
+
+    // post + refresh list/filter
+    private async Task DeleteFiltered(int id)
+    {
+        error = null;
+
+        try
+        {
+            await Posts.DeleteAsync(id);
+
+            // After successful delete: remove confirmation
+            confirmDeleteId = null;
+
+            // Refresh strategy:
+            // 1) if active title filter -> refresh by title
+            // 2) else if active userId filter -> refresh by userId
+            // 3) else -> full list
+            if (!string.IsNullOrWhiteSpace(titleFilter))
+            {
+                await SearchByTitle();
+            }
+            else if (int.TryParse(userIdText, out _))
+            {
+                await SearchByUserId();
+            }
+            else
+            {
+                await LoadAll();
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            // if error, leave confirmDeleteId = null, to hide prompt
+            confirmDeleteId = null;
+        }
+    }
+
+    // ======= Actions: Pagination =======
+    private async Task DeletePaged(int id)
+    {
+        error = null;
+        try
+        {
+            await Posts.DeleteAsync(id);
+            confirmDeleteId = null;
+            await ReloadPaged(); // refresh current page; will go back if empty
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            confirmDeleteId = null;
+        }
+    }
+}
