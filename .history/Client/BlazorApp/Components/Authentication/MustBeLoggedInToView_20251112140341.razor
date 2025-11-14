@@ -1,0 +1,34 @@
+
+
+@page "/MustBeLoggedInToView"
+@attribute [Authorize]
+
+<h3>Must Be Logged In To View</h3>
+
+<p>If you can see this, you are logged in!</p>
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Welcome, @context.User.Identity?.Name ?? "Unknown"</h3>
+        <p>
+            Your claims include:
+            <ol>
+                @foreach (var claim in context.User.Claims)
+                {
+                    <li>
+                        <label>@claim.Type : @claim.Value</label>
+                    </li>
+                }
+            </ol>
+        </p>
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not authorized to view this content.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+
+    
+}

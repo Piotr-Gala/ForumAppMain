@@ -38,5 +38,25 @@
     "Id": 8,
     "Username": "olkotron",
     "Password": "vghvgycykbgl"
+  },
+  {
+    "Id": 9,
+    "Username": "Paragon",
+    "Password": "123"
+  },
+  {
+    "Id": 10,
+    "Username": "waqar",
+    "Password": "Waqar12"
+  },
+  {
+    "Id": 11,
+    "Username": "Geanson",
+    "Password": "1234"
+  },
+  {
+    "Id": 12,
+    "Username": "Maksiu",
+    "Password": "cipa"
   }
 ]

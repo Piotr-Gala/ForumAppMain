@@ -11,6 +11,7 @@
           "ApiContracts": "1.0.0",
           "Entities": "1.0.0",
           "FileRepositories": "1.0.0",
+          "RepositoryContracts": "1.0.0",
           "Swashbuckle.AspNetCore": "6.5.0"
         },
         "runtime": {

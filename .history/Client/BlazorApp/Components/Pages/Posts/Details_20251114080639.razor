@@ -1,0 +1,196 @@
+@page "/posts/{Id:int}"
+
+@using ApiContracts.Posts
+@using ApiContracts.Comments
+@using System.Security.Claims
+
+@inject NavigationManager Nav
+
+@inject IPostService Posts
+@inject ICommentService Comments
+
+<h3>Post Details</h3>
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p style="color:red">@error</p>
+}
+
+@if (post is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div style="border:1px solid #ddd;padding:10px;margin-bottom:10px">
+        <p><b>Id:</b> @post.Id</p>
+        <p><b>Title:</b> @post.Title</p>
+        <p><b>Body:</b> @post.Body</p>
+        <p><b>UserId:</b> @post.UserId</p>
+
+        @if (post.UserId == userId)
+        {
+            <div style="margin-top:8px">
+                <button @onclick="@(() => Nav.NavigateTo($"/posts/{id}/edit"))">Edit</button>
+
+                @if (!confirmDelete)
+                {
+                    <button style="margin-left:8px" @onclick="@(()=> confirmDelete = true)">Delete</button>
+                }
+                else
+                {
+                    <span style="margin-left:8px">
+                        Are you sure?
+                        <button @onclick="Delete">Yes</button>
+                        <button style="margin-left:6px" @onclick="@(()=> confirmDelete = false)">No</button>
+                    </span>
+                }
+            </div>
+        }
+    </div>
+
+    <h4>Comments</h4>
+
+    @if (comments is null)
+    {
+        <p>Loading comments...</p>
+    }
+    else if (comments.Count == 0)
+    {
+        <p>No comments yet.</p>
+    }
+    else
+    {
+        <ul>
+        @foreach (var c in comments)
+        {
+            <li>
+                <b>[@c.Id]</b> (@c.UserId): @c.Body
+            </li>
+        }
+        </ul>
+    }
+
+    @if (userId is not null)
+    <h5>Add Comment</h5>
+    <div style="margin-bottom:6px">
+        <label>Body:</label><br />
+        <textarea @bind="newCommentBody" rows="3" cols="50"></textarea>
+    </div>
+    <button @onclick="AddComment">Add</button>
+    @if (!string.IsNullOrWhiteSpace(addCommentError))
+    {
+        <p style="color:red">@addCommentError</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(addCommentOk))
+    {
+        <p style="color:green">@addCommentOk</p>
+    }
+}
+
+@code {
+    [CascadingParameter] 
+    public Task<AuthenticationState>? State { get; set; }
+    [Parameter] public int id { get; set; }   // post id from URL
+
+    private int? userId;                     // current user id (if logged in)
+    private PostDto? post;                    // post data
+    private List<CommentDto>? comments;       // comments for the post
+    private string? error;                    // general error (post/comments)
+    private string? addCommentError;          // error when adding comment
+    private string? addCommentOk;             // success message after adding
+    private string? newCommentBody;           // body of the new comment
+    private bool confirmDelete = false;       // flag to show delete confirmation
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var authState = await State!;
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var idClaim = user.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier);
+            userId = int.Parse(idClaim.Value);
+        }
+        else
+        {
+            userId = null;
+        }
+
+        // On each change of the id parameter, we fetch the data again
+        error = addCommentError = addCommentOk = null;
+
+        try
+        {
+            post = await Posts.GetByIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            error = $"Cannot load post: {ex.Message}";
+            post = null;
+            comments = [];
+            return;
+        }
+
+        try
+        {
+            comments = await Comments.GetByPostIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            error = $"Cannot load comments: {ex.Message}";
+            comments = [];
+        }
+    }
+
+    private async Task AddComment()
+    {
+        addCommentError = addCommentOk = null;
+
+        if (string.IsNullOrWhiteSpace(newCommentBody))
+        {
+            addCommentError = "Body is required.";
+            return;
+        }
+        if (userId is null)
+        {
+            addCommentError = "You must be logged in to add a comment.";
+            return;
+        }
+        try
+        {
+            var dto = new CreateCommentDto
+            {
+                PostId = id,
+                UserId = userId.Value,
+                Body = newCommentBody
+            };
+
+            await Comments.AddAsync(dto);
+
+            // After adding – clear textarea and reload comments list
+            newCommentBody = string.Empty;
+            comments = await Comments.GetByPostIdAsync(id);
+            addCommentOk = "Comment added.";
+        }
+        catch (Exception ex)
+        {
+            addCommentError = ex.Message;
+        }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            await Posts.DeleteAsync(id);
+            //after delete, navigate back to posts list
+            Nav.NavigateTo("/posts");
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            confirmDelete = false;
+        }
+    }
+}

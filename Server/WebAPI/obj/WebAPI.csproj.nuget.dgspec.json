@@ -1036,6 +1036,9 @@
               "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\FileRepositories\\FileRepositories.csproj": {
                 "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\FileRepositories\\FileRepositories.csproj"
               },
+              "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\RepositoryContracts\\RepositoryContracts.csproj": {
+                "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\RepositoryContracts\\RepositoryContracts.csproj"
+              },
               "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Shared\\ApiContracts\\ApiContracts.csproj": {
                 "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Shared\\ApiContracts\\ApiContracts.csproj"
               }

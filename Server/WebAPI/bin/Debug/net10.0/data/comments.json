@@ -76,5 +76,23 @@
     "Body": "Let me ad a comment first",
     "UserId": 1,
     "PostId": 4
+  },
+  {
+    "Id": 14,
+    "Body": "guwno",
+    "UserId": 12,
+    "PostId": 6
+  },
+  {
+    "Id": 15,
+    "Body": "P\u0142atki",
+    "UserId": 12,
+    "PostId": 2
+  },
+  {
+    "Id": 16,
+    "Body": "g\u00F3wno",
+    "UserId": 12,
+    "PostId": 10
   }
 ]

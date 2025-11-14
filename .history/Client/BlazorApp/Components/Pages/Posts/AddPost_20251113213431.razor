@@ -1,0 +1,98 @@
+@page "/posts/addpost"
+@using System.Security.Claims
+@inject IPostService Posts
+@inject NavigationManager Nav
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Create Post</h3>    
+
+        <div style="max-width:600px">
+            <div class="mb-2">
+                <label>Title</label><br />
+                <input @bind="title" placeholder="Post title" />
+            </div>
+    
+            <div class="mb-2">
+                <label>Body</label><br />
+                <textarea @bind="body" rows="5" cols="60" placeholder="Post body"></textarea>
+            </div>
+            <button @onclick="Create">Create</button>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <p style="color:red">@error</p>
+        }
+        @if (!string.IsNullOrWhiteSpace(ok))
+        {
+            <p style="color:green">@ok</p>
+            <p><a href="/posts">Go to list</a></p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <img width="600" src="https://i.kym-cdn.com/entries/icons/original/000/002/144/You_Shall_Not_Pass!_0-1_screenshot.jpg"/>
+        <p>You'll have to log in!</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code 
+{
+    [CascadingParameter]
+    public Task<AuthenticationState>? State { get; set; }
+    
+    private int userId;
+    private string? title;
+    private string? body;
+    private string? error;
+    private string? ok;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authenticationState = await State!;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if(claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {   // the user is not logged in
+            return;
+        }
+        string? userName = claimsPrincipal.Identity?.Name;
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == "Id").Value;
+        userId = int.Parse(userIdAsString);
+    }
+
+    private async Task Create()
+    {
+        error = ok = null;
+
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            error = "Title is required.";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            error = "Body is required.";
+            return;
+        }
+        try
+        {
+            var dto = new CreatePostDto
+            {
+                Title = title,
+                Body = body,
+                UserId = userId
+            };
+
+            var created = await Posts.AddPostAsync(dto);
+            ok = $"Post created with Id={created.Id}.";
+            // After creating, clear the form
+            title = body = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+}

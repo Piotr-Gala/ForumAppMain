@@ -12,6 +12,19 @@
           "buildMultiTargeting/Microsoft.AspNetCore.App.Internal.Assets.targets": {}
         }
       },
+      "Microsoft.AspNetCore.Components.Authorization/10.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/_._": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/_._": {
+            "related": ".xml"
+          }
+        }
+      },
       "ApiContracts/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -48,6 +61,21 @@
         "microsoft.aspnetcore.app.internal.assets.nuspec"
       ]
     },
+    "Microsoft.AspNetCore.Components.Authorization/10.0.0": {
+      "sha512": "z/4yuTmCD1A3x++Dr8s2H3yD6nUGglqxvjsPL65BUynJlEO0ZaOaI0TIQ58+OyU8IAw98eprHlezix8UyRMqKg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.components.authorization/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.txt",
+        "lib/net10.0/Microsoft.AspNetCore.Components.Authorization.dll",
+        "lib/net10.0/Microsoft.AspNetCore.Components.Authorization.xml",
+        "microsoft.aspnetcore.components.authorization.10.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.components.authorization.nuspec"
+      ]
+    },
     "ApiContracts/1.0.0": {
       "type": "project",
       "path": "../../Shared/ApiContracts/ApiContracts.csproj",
@@ -57,7 +85,8 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "ApiContracts >= 1.0.0",
-      "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.0-preview.7.25380.108"
+      "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.0-preview.7.25380.108",
+      "Microsoft.AspNetCore.Components.Authorization >= 10.0.0"
     ]
   },
   "packageFolders": {
@@ -66,11 +95,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj",
+      "projectUniqueName": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj",
       "projectName": "BlazorApp",
-      "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\BlazorApp.csproj",
+      "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\BlazorApp.csproj",
       "packagesPath": "C:\\Users\\piter\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\client\\BlazorApp\\obj\\",
+      "outputPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Client\\BlazorApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\piter\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -112,6 +141,10 @@
             "target": "Package",
             "version": "[10.0.0-preview.7.25380.108, )",
             "autoReferenced": true
+          },
+          "Microsoft.AspNetCore.Components.Authorization": {
+            "target": "Package",
+            "version": "[10.0.0, )"
           }
         },
         "imports": [
@@ -550,5 +583,17 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "PackageReference Microsoft.AspNetCore.Components.Authorization will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "libraryId": "Microsoft.AspNetCore.Components.Authorization",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }
