@@ -1,0 +1,446 @@
+@page "/posts"
+@using ApiContracts.Posts
+@using ApiContracts.Users
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using ApiContracts
+
+@inject IPostService Posts
+@inject IUserService Users
+@inject NavigationManager Nav
+
+<h3>Posts</h3>
+
+<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px;">
+    <div style="display:flex; gap:16px; align-items:flex-end; flex-wrap:wrap;">
+
+        <div>
+            <label>Search title:</label><br />
+            <input @bind="titleFilter" placeholder="e.g. hello" disabled="@isLoading" />
+            <button @onclick="SearchByTitle" disabled="@isLoading">Search</button>
+        </div>
+
+        <div>
+            <label>Filter by UserId (int):</label><br />
+            <input @bind="userIdText" placeholder="e.g. 1" disabled="@isLoading" />
+            <button @onclick="SearchByUserId" disabled="@isLoading">Search</button>
+        </div>
+
+        <div>
+            <label>Sort:</label><br />
+            <select value="@sort" @onchange="SortChanged" disabled="@isLoading">
+                <option value="createdDesc">Newest first</option>
+                <option value="createdAsc">Oldest first</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Page size:</label><br />
+            <select value="@pageSize" @onchange="PageSizeChanged" disabled="@isLoading">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+            </select>
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox"
+                       checked="@onlyMine"
+                       @onchange="OnlyMineChanged"
+                       disabled="@(!userId.HasValue || isLoading)" />
+                Only my posts
+            </label>
+            @if (!userId.HasValue)
+            {
+                <span style="font-size:smaller; color:gray;"> (log in to use)</span>
+            }
+        </div>
+
+        <div style="margin-left:auto;">
+            <button @onclick="ResetFilters" disabled="@isLoading">Clear filters</button>
+            <a href="/posts/addpost" style="margin-left:12px">+ Add Post</a>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <p style="color:red">@error</p>
+}
+
+@if (pageData is null || isLoading)
+{
+    <p>Loading...</p>
+}
+else if (pageData.Items.Count == 0)
+{
+    <p>No posts.</p>
+}
+else
+{
+    <p>
+        Showing <b>@startIdx–@endIdx</b> of <b>@pageData.TotalCount</b>
+        (Page <b>@(page)</b>)
+    </p>
+
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="border-bottom:1px solid #ccc;">
+                <th style="text-align:left; padding:4px;">Id</th>
+                <th style="text-align:left; padding:4px;">Title</th>
+                <th style="text-align:left; padding:4px;">Author</th>
+                <th style="text-align:left; padding:4px;">Body (excerpt)</th>
+                <th style="text-align:left; padding:4px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in pageData.Items)
+        {
+            <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:4px;">@p.Id</td>
+                <td style="padding:4px;">
+                    <a href="@($"/posts/{p.Id}")">@p.Title</a>
+                </td>
+                <td style="padding:4px;">@GetUserName(p.UserId)</td>
+                <td style="padding:4px;">@GetExcerpt(p.Body, 80)</td>
+                <td style="padding:4px;">
+                    <button type="button"
+                            @onclick="@(()=> Nav.NavigateTo($"/posts/{p.Id}"))"
+                            disabled="@isLoading">
+                        View
+                    </button>
+
+                    <AuthorizeView>
+                        <Authorized>
+                            @if (p.UserId == userId)
+                            {
+                                <button type="button"
+                                        style="margin-left:4px"
+                                        @onclick="@(()=> Nav.NavigateTo($"/posts/{p.Id}/edit"))"
+                                        disabled="@isLoading">
+                                    Edit
+                                </button>
+
+                                @if (confirmDeleteId != p.Id)
+                                {
+                                    <button type="button"
+                                            style="margin-left:6px"
+                                            @onclick="@(()=> confirmDeleteId = p.Id)"
+                                            disabled="@isLoading">
+                                        Delete
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span style="margin-left:6px">
+                                        Sure?
+                                        <button type="button"
+                                                @onclick="@(()=> DeletePaged(p.Id))"
+                                                disabled="@isLoading">
+                                            Yes
+                                        </button>
+                                        <button type="button"
+                                                style="margin-left:6px"
+                                                @onclick="@(()=> confirmDeleteId = null)"
+                                                disabled="@isLoading">
+                                            No
+                                        </button>
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <span style="color:#888; margin-left:4px;">—</span>
+                            }
+                        </Authorized>
+                    </AuthorizeView>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+        <button type="button" @onclick="Prev" disabled="@(isPrevDisabled || isLoading)">Prev</button>
+
+        @for (var i = 1; i <= maxPage; i++)
+        {
+            var pageNumber = i;   <!-- WAŻNE: lokalna zmienna, żeby nie było buga z closurą -->
+            <button type="button"
+                    disabled="@(page == pageNumber || isLoading)"
+                    @onclick="@(()=> GoToPage(pageNumber))">
+                @pageNumber
+            </button>
+        }
+
+        <button type="button" @onclick="Next" disabled="@(isNextDisabled || isLoading)">Next</button>
+
+        <span style="margin-left:8px; font-size:12px;">
+            Page <b>@(page)</b> of <b>@maxPage</b>
+        </span>
+    </div>
+}
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState>? State { get; set; }
+
+    private string? error;
+    private int? confirmDeleteId;
+
+    private string? titleFilter;
+    private string? userIdText;
+    private int? userId;
+    private bool onlyMine;
+
+    private bool isLoading;
+    private PagedResultDto<PostDto>? pageData;
+
+    private int page = 1;
+    private int pageSize = 10;
+    private string sort = "createdDesc";
+
+    private Dictionary<int, UserDto> usersById = new();
+
+    private int maxPage =>
+        pageData is null || pageData.TotalCount == 0
+            ? 1
+            : Math.Max(1, (int)Math.Ceiling(pageData.TotalCount / (double)pageSize));
+
+    private int startIdx =>
+        (pageData is null || pageData.TotalCount == 0)
+            ? 0
+            : ((page - 1) * pageSize) + 1;
+
+    private int endIdx =>
+        (pageData is null)
+            ? 0
+            : Math.Min(page * pageSize, pageData.TotalCount);
+
+    private bool CanGoPrev => page > 1;
+    private bool CanGoNext => page < maxPage;
+
+    private bool isPrevDisabled => !CanGoPrev;
+    private bool isNextDisabled => !CanGoNext;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (State is not null)
+        {
+            var auth = await State!;
+            var user = auth.User;
+            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                var idClaim = user.Claims.SingleOrDefault(c => c.Type == "Id" || c.Type == ClaimTypes.NameIdentifier);
+                if (idClaim is not null && int.TryParse(idClaim.Value, out var parsedId))
+                {
+                    userId = parsedId;
+                }
+            }
+        }
+
+        await LoadUsersAsync();
+        await ReloadPaged();
+    }
+
+    private async Task LoadUsersAsync()
+    {
+        try
+        {
+            var all = await Users.GetAllAsync();
+            usersById = all.ToDictionary(u => u.Id);
+        }
+        catch
+        {
+            usersById = new();
+        }
+    }
+
+    private string GetUserName(int uid)
+    {
+        if (usersById.TryGetValue(uid, out var u))
+            return u.Username;
+
+        return $"User #{uid}";
+    }
+
+    private async Task ResetFilters()
+    {
+        titleFilter = null;
+        userIdText = null;
+        onlyMine = false;
+        page = 1;
+        await ReloadPaged();
+    }
+
+    private async Task SortChanged(ChangeEventArgs e)
+    {
+        sort = e?.Value?.ToString() ?? sort;
+        page = 1;
+        await ReloadPaged();
+    }
+
+    private async Task PageSizeChanged(ChangeEventArgs e)
+    {
+        if (!int.TryParse(e?.Value?.ToString(), out var ps))
+            ps = pageSize;
+
+        pageSize = ps;
+        page = 1;
+        await ReloadPaged();
+    }
+
+    private async Task OnlyMineChanged(ChangeEventArgs e)
+    {
+        if (e.Value is bool b)
+            onlyMine = b;
+        else if (bool.TryParse(e.Value?.ToString(), out var parsed))
+            onlyMine = parsed;
+
+        if (onlyMine)
+        {
+            userIdText = null;
+        }
+
+        page = 1;
+        await ReloadPaged();
+    }
+
+    private async Task SearchByTitle()
+    {
+        error = null;
+        confirmDeleteId = null;
+
+        if (string.IsNullOrWhiteSpace(titleFilter))
+        {
+            await ResetFilters();
+            return;
+        }
+
+        page = 1;
+        await ReloadPaged();
+    }
+
+    private async Task SearchByUserId()
+    {
+        error = null;
+        confirmDeleteId = null;
+
+        if (!int.TryParse(userIdText, out _))
+        {
+            error = "UserId must be an integer.";
+            return;
+        }
+
+        page = 1;
+        await ReloadPaged();
+    }
+
+    private async Task ReloadPaged()
+    {
+        error = null;
+        confirmDeleteId = null;
+
+        try
+        {
+            isLoading = true;
+
+            int? uid = null;
+            if (onlyMine && userId.HasValue)
+            {
+                uid = userId.Value;
+            }
+            else if (int.TryParse(userIdText, out var parsed))
+            {
+                uid = parsed;
+            }
+
+            pageData = await Posts.GetPageAsync(page, pageSize, sort, titleFilter, uid);
+
+            if (pageData.TotalCount > 0)
+            {
+                var maxPageLocal = Math.Max(1, (int)Math.Ceiling(pageData.TotalCount / (double)pageSize));
+                if (page > maxPageLocal)
+                {
+                    page = maxPageLocal;
+                    pageData = await Posts.GetPageAsync(page, pageSize, sort, titleFilter, uid);
+                }
+            }
+            else
+            {
+                page = 1;
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            pageData = new PagedResultDto<PostDto>
+            {
+                Items = new List<PostDto>(),
+                TotalCount = 0
+            };
+            page = 1;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task Prev()
+    {
+        if (!CanGoPrev || isLoading) return;
+        page--;
+        await ReloadPaged();
+    }
+
+    private async Task Next()
+    {
+        if (!CanGoNext || isLoading) return;
+        page++;
+        await ReloadPaged();
+    }
+
+    private async Task GoToPage(int p)
+    {
+        if (p < 1 || p > maxPage || isLoading) return;
+        page = p;
+        await ReloadPaged();
+    }
+
+    private async Task DeletePaged(int id)
+    {
+        if (isLoading) return;
+        error = null;
+
+        try
+        {
+            isLoading = true;
+            await Posts.DeleteAsync(id);
+            confirmDeleteId = null;
+
+            if (page > 1 && pageData is not null && pageData.Items.Count == 1)
+            {
+                page--;
+            }
+
+            await ReloadPaged();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            confirmDeleteId = null;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private static string GetExcerpt(string body, int length)
+        => string.IsNullOrEmpty(body) || body.Length <= length
+            ? body
+            : body[..length] + "...";
+}

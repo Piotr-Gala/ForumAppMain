@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebAPI\\WebAPI.csproj": {}
+    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebApi\\WebAPI.csproj": {}
   },
   "projects": {
     "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\Entities\\Entities.csproj": {
@@ -1008,14 +1008,14 @@
         }
       }
     },
-    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebAPI\\WebAPI.csproj": {
+    "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebApi\\WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebAPI\\WebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebApi\\WebAPI.csproj",
         "projectName": "WebAPI",
-        "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebAPI\\WebAPI.csproj",
+        "projectPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebApi\\WebAPI.csproj",
         "packagesPath": "C:\\Users\\piter\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebAPI\\obj\\",
+        "outputPath": "C:\\Users\\piter\\DNP1\\dotnet\\ForumApp\\Server\\WebApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\piter\\AppData\\Roaming\\NuGet\\NuGet.Config"

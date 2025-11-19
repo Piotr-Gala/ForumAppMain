@@ -1,0 +1,142 @@
+@page "/profile"
+@using System.Security.Claims
+
+@inject IPostService Posts
+@inject ICommentService Comments
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager Nav
+
+<h3>User profile</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h4>You are not authorized to view this page.</h4>
+        <p>Please log in to see your profile, posts and comments.</p>
+        <button @onclick="NavigateToLogin">Go to Login</button>
+    </NotAuthorized>
+
+    <Authorized>
+        <h4>Welcome, @userName!</h4>
+        @if (userId is not null)
+        {
+            <p>Your user id: <b>@userId</b></p>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <p style="color:red">@error</p>
+        }
+
+        @if (isLoading)
+        {
+            <p>Loading your data...</p>
+        }
+        else
+        {
+            <h5>My posts</h5>
+            @if (myPosts is null)
+            {
+                <p>Could not load your posts.</p>
+            }
+            else if (myPosts.Count == 0)
+            {
+                <p>You have not created any posts yet.</p>
+            }
+            else
+            {
+                <ul>
+                    @foreach (var p in myPosts)
+                    {
+                        <li>
+                            <a href="/posts/@p.Id">@p.Title</a>
+                            (Id: @p.Id)
+                        </li>
+                    }
+                </ul>
+            }
+
+            <h5>My comments</h5>
+            @if (myComments is null)
+            {
+                <p>Could not load your comments.</p>
+            }
+            else if (myComments.Count == 0)
+            {
+                <p>You have not written any comments yet.</p>
+            }
+            else
+            {
+                <ul>
+                    @foreach (var c in myComments)
+                    {
+                        <li>
+                            On post <a href="/posts/@c.PostId">#@c.PostId</a>:
+                            @c.Body
+                        </li>
+                    }
+                </ul>
+            }
+        }
+
+        <button @onclick="Logout">Log out</button>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private int? userId;
+    private string? userName;
+    private List<PostDto>? myPosts;
+    private List<CommentDto>? myComments;
+    private string? error;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // bierzemy aktualny stan auth z naszego SimpleAuthProvider
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is null || !user.Identity.IsAuthenticated)
+        {
+            isLoading = false;
+            return;
+        }
+
+        userName = user.Identity.Name;
+
+        var idClaim = user.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (idClaim is null || !int.TryParse(idClaim.Value, out var parsedId))
+        {
+            error = "Cannot read user id from authentication claims.";
+            isLoading = false;
+            return;
+        }
+
+        userId = parsedId;
+
+        try
+        {
+            myPosts = await Posts.GetByUserIdAsync(userId.Value);
+            myComments = await Comments.GetByUserIdAsync(userId.Value);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void NavigateToLogin()
+    {
+        Nav.NavigateTo("/login");
+    }
+
+    private async Task Logout()
+    {
+        await ((SimpleAuthProvider)AuthProvider).Logout();
+        Nav.NavigateTo("/");
+    }
+}

@@ -3,66 +3,92 @@
     "Id": 1,
     "Title": "First Post",
     "Body": "This is the first post\n\n[edit]",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": []
   },
   {
     "Id": 2,
     "Title": "P\u0142atki i Mleko",
     "Body": "Najpierw P\u0142atki czy Mleko?",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": [
+      12,
+      1
+    ]
   },
   {
     "Id": 3,
     "Title": "Kaczki",
     "Body": "ryz woda staw anything",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": []
   },
   {
     "Id": 4,
     "Title": "poscik",
     "Body": "dupa",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": []
   },
   {
     "Id": 5,
     "Title": "post2",
     "Body": "dupa",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": []
   },
   {
     "Id": 6,
     "Title": "dvmkedfvfedupa",
     "Body": "kupakupa",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": [
+      1
+    ]
   },
   {
     "Id": 8,
     "Title": "PPFPF",
     "Body": "HGFDSVCdvkdfv",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": [
+      1
+    ]
   },
   {
     "Id": 9,
     "Title": "Hej u\u017Cytkownicy :D :wave:",
     "Body": "Hej ludziska jestem Parago, jestem tu nowy ;P",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": [
+      1
+    ]
   },
   {
     "Id": 10,
     "Title": "Session 10",
     "Body": "Again i came late cause never learn anything from the session",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": [
+      1
+    ]
   },
   {
     "Id": 11,
     "Title": "palenie zim\u0105",
     "Body": "pale oponami w piecu jak jest zimno, zeby zaoszczedzic na weglu/drewnie :DDD",
-    "UserId": 12
+    "UserId": 12,
+    "LikedByUserIds": [
+      1
+    ]
   },
   {
     "Id": 12,
     "Title": "testowanie",
     "Body": "again",
-    "UserId": 1
+    "UserId": 1,
+    "LikedByUserIds": [
+      1
+    ]
   }
 ]

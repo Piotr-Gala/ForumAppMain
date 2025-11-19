@@ -1,0 +1,29 @@
+@page "/profile"
+@using BlazorApp.Auth
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager navMgr
+<h3>User Profile</h3>
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You are not authorized to view this page. Please log in.</h3>
+        <button @onclick="NavigateToLogin">Go to Login</button>
+    </NotAuthorized>
+    <Authorized>
+        <h3>Welcome, @context.User.Identity?.Name!</h3>
+        <p>This is your profile page.</p>
+        <button @onclick="Logout">Log out</button>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private void NavigateToLogin()
+    {
+        navMgr.NavigateTo("/login");
+    }
+
+    private async Task Logout()
+    {
+        await ((SimpleAuthProvider)AuthProvider).Logout();
+        navMgr.NavigateTo("/");
+    }
+}
