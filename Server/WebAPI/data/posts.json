@@ -21,14 +21,19 @@
     "Title": "Kaczki",
     "Body": "ryz woda staw anything",
     "UserId": 1,
-    "LikedByUserIds": []
+    "LikedByUserIds": [
+      12
+    ]
   },
   {
     "Id": 4,
     "Title": "poscik",
     "Body": "dupa",
     "UserId": 1,
-    "LikedByUserIds": []
+    "LikedByUserIds": [
+      1,
+      12
+    ]
   },
   {
     "Id": 5,
@@ -43,7 +48,8 @@
     "Body": "kupakupa",
     "UserId": 1,
     "LikedByUserIds": [
-      1
+      1,
+      12
     ]
   },
   {
@@ -61,7 +67,8 @@
     "Body": "Hej ludziska jestem Parago, jestem tu nowy ;P",
     "UserId": 1,
     "LikedByUserIds": [
-      1
+      1,
+      12
     ]
   },
   {
@@ -79,7 +86,8 @@
     "Body": "pale oponami w piecu jak jest zimno, zeby zaoszczedzic na weglu/drewnie :DDD",
     "UserId": 12,
     "LikedByUserIds": [
-      1
+      1,
+      13
     ]
   },
   {
@@ -90,5 +98,19 @@
     "LikedByUserIds": [
       1
     ]
+  },
+  {
+    "Id": 13,
+    "Title": "kurwa",
+    "Body": "bruh",
+    "UserId": 13,
+    "LikedByUserIds": []
+  },
+  {
+    "Id": 14,
+    "Title": "cipa",
+    "Body": "brou",
+    "UserId": 14,
+    "LikedByUserIds": []
   }
 ]

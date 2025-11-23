@@ -71,8 +71,6 @@ C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compresse
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\l2mhd45r4z-{0}-63fj8s7r0e-63fj8s7r0e.gz
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\i0oilot2q1-{0}-0j3bgjxly4-0j3bgjxly4.gz
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\hsa0fwp5ls-{0}-13ja33weya-13ja33weya.gz
-C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\0txged01c1-{0}-cyt5sts332-cyt5sts332.gz
-C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\e2p7e3doxt-{0}-wos4yuj1st-wos4yuj1st.gz
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\8v4adbxxmx-{0}-2mc2qwa0tf-2mc2qwa0tf.gz
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\rrzzv9ip5o-{0}-2mc2qwa0tf-2mc2qwa0tf.gz
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\staticwebassets.build.json
@@ -85,3 +83,8 @@ C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\refint\Bl
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\BlazorApp.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\BlazorApp.genruntimeconfig.cache
 C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\ref\BlazorApp.dll
+C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\EmbeddedAttribute.cs
+C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\ValidatableTypeAttribute.cs
+C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\0txged01c1-{0}-j8lzlu28q6-j8lzlu28q6.gz
+C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\compressed\e2p7e3doxt-{0}-u1n4jc5v46-u1n4jc5v46.gz
+C:\Users\piter\DNP1\dotnet\ForumApp\Client\BlazorApp\obj\Debug\net10.0\swae.build.ex.cache

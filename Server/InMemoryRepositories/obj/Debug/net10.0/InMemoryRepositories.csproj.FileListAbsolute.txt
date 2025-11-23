@@ -16,6 +16,12 @@ C:\Users\piter\DNP1\dotnet\ForumApp\InMemoryRepositories\obj\Debug\net10.0\InMem
 C:\Users\piter\DNP1\dotnet\ForumApp\InMemoryRepositories\obj\Debug\net10.0\refint\InMemoryRepositories.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\InMemoryRepositories\obj\Debug\net10.0\ref\InMemoryRepositories.dll
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.csproj.AssemblyReference.cache
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.AssemblyInfoInputs.cache
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.AssemblyInfo.cs
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.csproj.CoreCompileInputs.cache
+C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.sourcelink.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.0\InMemoryRepositories.deps.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.0\InMemoryRepositories.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.0\InMemoryRepositories.pdb
@@ -23,12 +29,6 @@ C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.0\RepositoryContracts.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.0\Entities.pdb
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\bin\Debug\net10.0\RepositoryContracts.pdb
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.csproj.AssemblyReference.cache
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.AssemblyInfoInputs.cache
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.AssemblyInfo.cs
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.csproj.CoreCompileInputs.cache
-C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.sourcelink.json
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemory.C4D1EAE1.Up2Date
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\InMemoryRepositories.dll
 C:\Users\piter\DNP1\dotnet\ForumApp\Server\InMemoryRepositories\obj\Debug\net10.0\refint\InMemoryRepositories.dll
